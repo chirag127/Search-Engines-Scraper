@@ -32,8 +32,7 @@ try:
         if handle == -1:
             raise WinError()
         csbi = create_string_buffer(22)
-        res = windll.kernel32.GetConsoleScreenBufferInfo(handle, csbi)
-        if res:
+        if res := windll.kernel32.GetConsoleScreenBufferInfo(handle, csbi):
             res = struct.unpack("hhhhHhhhhhh", csbi.raw)
             left, top, right, bottom = res[5:9]
             columns = right - left + 1
@@ -89,10 +88,10 @@ def get_terminal_size(fallback=(80, 24)):
         except (NameError, OSError):
             size = terminal_size(*fallback)
 
-        if columns <= 0:
-            columns = size.columns
-        if lines <= 0:
-            lines = size.lines
+    if columns <= 0:
+        columns = size.columns
+    if lines <= 0:
+        lines = size.lines
 
     return terminal_size(columns, lines)
 

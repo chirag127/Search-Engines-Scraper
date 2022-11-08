@@ -115,10 +115,10 @@ class SearchEngine(object):
     def _is_ok(self, response):
         '''Checks if the HTTP response is 200 OK.'''
         self.is_banned = response.http in [403, 429, 503]
-        
+
         if response.http == 200:
             return True
-        msg = ('HTTP ' + str(response.http)) if response.http else response.html
+        msg = f'HTTP {str(response.http)}' if response.http else response.html
         out.console(msg, level=out.Level.error)
         return False
     
@@ -140,19 +140,19 @@ class SearchEngine(object):
 
         for operator in operators:
             if operator not in supported_operators:
-                msg = u'Ignoring unsupported operator "{}"'.format(operator)
+                msg = f'Ignoring unsupported operator "{operator}"'
                 out.console(msg, level=out.Level.warning)
             else:
                 self._filters += [operator]
     
-    def search(self, query, pages=cfg.SEARCH_ENGINE_RESULTS_PAGES): 
+    def search(self, query, pages=cfg.SEARCH_ENGINE_RESULTS_PAGES):
         '''Queries the search engine, goes through the pages and collects the results.
         
         :param query: str The search query  
         :param pages: int Optional, the maximum number of results pages to search  
         :returns SearchResults object
         '''
-        out.console('Searching {}'.format(self.__class__.__name__))
+        out.console(f'Searching {self.__class__.__name__}')
         self._query = utils.decode_bytes(query)
         self.results = SearchResults()
         request = self._first_page()
@@ -165,7 +165,7 @@ class SearchEngine(object):
                 tags = BeautifulSoup(response.html, "html.parser")
                 items = self._filter_results(tags)
                 self._collect_results(items)
-                
+
                 msg = 'page: {:<8} links: {}'.format(page, len(self.results))
                 out.console(msg, end='')
                 request = self._next_page(tags)
@@ -194,8 +194,8 @@ class SearchEngine(object):
         if out.PRINT in output:
             out.print_results([self])
         if out.HTML in output:
-            out.write_file(out.create_html_data([self]), path + u'.html') 
+            out.write_file(out.create_html_data([self]), f'{path}.html')
         if out.CSV in output:
-            out.write_file(out.create_csv_data([self]), path + u'.csv') 
+            out.write_file(out.create_csv_data([self]), f'{path}.csv')
         if out.JSON in output:
-            out.write_file(out.create_json_data([self]), path + u'.json')
+            out.write_file(out.create_json_data([self]), f'{path}.json')

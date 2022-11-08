@@ -27,9 +27,9 @@ class Ask(SearchEngine):
     
     def _next_page(self, tags):
         '''Returns the next page URL and post data (if any)'''
-        next_page = tags.select_one(self._selectors('next'))
-        url = None
-        if next_page:
+        if next_page := tags.select_one(self._selectors('next')):
             url = self._base_url + next_page['href']
+        else:
+            url = None
         return {'url':url, 'data':None}
 

@@ -28,12 +28,14 @@ class Brave(SearchEngine):
     def _next_page(self, tags):
         '''Returns the next page URL and post data (if any)'''
         selector = self._selectors('next')
-        next_page = [
-            tag for tag in tags.select(selector['tag']) 
-            if tag.get_text().strip() == selector['text'] and selector['skip'] not in tag['class']
-        ]
-        url = None
-        if next_page:
+        if next_page := [
+            tag
+            for tag in tags.select(selector['tag'])
+            if tag.get_text().strip() == selector['text']
+            and selector['skip'] not in tag['class']
+        ]:
             url = self._base_url + next_page[0]['href']
+        else:
+            url = None
         return {'url':url, 'data':None}
 

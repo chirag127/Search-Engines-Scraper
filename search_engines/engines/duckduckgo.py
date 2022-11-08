@@ -26,16 +26,14 @@ class Duckduckgo(SearchEngine):
     def _first_page(self):
         '''Returns the initial page and query.'''
         res = self._http_client.get(self._main_url.format(self._query))
-        match = re.search(self._selectors('first_page'), res.html)
-        if match:
-            return {'url':self._base_url.format(match.group(1)), 'data':None}
+        if match := re.search(self._selectors('first_page'), res.html):
+            return {'url': self._base_url.format(match[1]), 'data': None}
         return {'url':None, 'data':None}
     
     def _next_page(self, tags):
         '''Returns the next page URL and post data (if any)'''
-        match = re.search(self._selectors('next_page'), tags.get_text())
-        if match:
-            return {'url':self._base_url.format(match.group(1)), 'data':None}
+        if match := re.search(self._selectors('next_page'), tags.get_text()):
+            return {'url': self._base_url.format(match[1]), 'data': None}
         return {'url':None, 'data':None}
 
     def _get_page(self, page, data=None):
@@ -50,7 +48,7 @@ class Duckduckgo(SearchEngine):
         match = re.search(self._selectors('results'), self._current_page)
         if not match:
             return {}
-        data = json.loads(re.sub('\n|\r', '', match.group(1)))[:-1]
+        data = json.loads(re.sub('\n|\r', '', match[1]))[:-1]
         results = [
             {'link':i['u'], 'title':i['t'], 'text': BeautifulSoup(i['a'], 'html.parser').get_text()} 
             for i in data

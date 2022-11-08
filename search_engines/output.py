@@ -19,10 +19,10 @@ from .config import PYTHON_VERSION
 def print_results(search_engines):
     '''Prints the search results.'''
     for engine in search_engines:
-        console(engine.__class__.__name__ + u' results') 
+        console(f'{engine.__class__.__name__} results') 
 
         for i, v in enumerate(engine.results, 1):
-            console(u'{:<4}{}'.format(i, v['link'])) 
+            console(u'{:<4}{}'.format(i, v['link']))
         console(u'')
 
 def create_csv_data(search_engines):
@@ -43,12 +43,12 @@ def create_csv_data(search_engines):
 def create_json_data(search_engines):
     '''JSON formats the search results.'''
     jobj = {
-        u'query': search_engines[0]._query, 
+        u'query': search_engines[0]._query,
         u'results': {
-            se.__class__.__name__: [i for i in se.results] 
-            for se in search_engines
-        }
+            se.__class__.__name__: list(se.results) for se in search_engines
+        },
     }
+
     return json.dumps(jobj)
 
 def create_html_data(search_engines):
@@ -74,7 +74,7 @@ def create_html_data(search_engines):
 def _replace_with_bold(query, data):
     '''Places the query in <b> tags.'''
     for match in re.findall(query, data, re.I):
-        data = data.replace(match, u'<b>{}</b>'.format(match))
+        data = data.replace(match, f'<b>{match}</b>')
     return data
 
 
@@ -85,14 +85,14 @@ def write_file(data, path, encoding='utf-8'):
             f = io.open(path, 'wb') 
         else: 
             f = io.open(path, 'w', encoding=encoding, newline='')
-        
+
         if type(data) is list:
             writer = csv.writer(f)
             writer.writerows(data)
         else:
             f.write(data)
         f.close()
-        console(u'Output file: ' + path)
+        console(f'Output file: {path}')
     except IOError as e:
         console(e, level=Level.error)
 
@@ -100,7 +100,7 @@ def write_file(data, path, encoding='utf-8'):
 def console(msg, end='\n', level=None):
     '''Prints data on the console.'''
     console_len = get_terminal_size().columns
-    clear_line = u'\r{}\r'.format(u' ' * (console_len - 1))
+    clear_line = f"\r{' ' * (console_len - 1)}\r"
     msg = clear_line + (level or u'') + msg
     print(msg, end=end)
 
