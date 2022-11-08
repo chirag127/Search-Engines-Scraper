@@ -31,7 +31,7 @@ class MultipleSearchEngines(object):
             engine.ignore_duplicate_domains = self.ignore_duplicate_domains
             if self._filter:
                 engine.set_search_operator(self._filter)
-            
+
             engine_results = engine.search(query, pages)
             if engine.ignore_duplicate_urls:
                 engine_results._results = [
@@ -60,11 +60,11 @@ class MultipleSearchEngines(object):
         if out.PRINT in output:
             out.print_results(self._engines)
         if out.HTML in output:
-            out.write_file(out.create_html_data(self._engines), path + u'.html') 
+            out.write_file(out.create_html_data(self._engines), f'{path}.html')
         if out.CSV in output:
-            out.write_file(out.create_csv_data(self._engines), path + u'.csv') 
+            out.write_file(out.create_csv_data(self._engines), f'{path}.csv')
         if out.JSON in output:
-            out.write_file(out.create_json_data(self._engines), path + u'.json')
+            out.write_file(out.create_json_data(self._engines), f'{path}.json')
 
 
 class AllSearchEngines(MultipleSearchEngines):

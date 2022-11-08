@@ -27,9 +27,7 @@ class Metager(SearchEngine):
         '''Redirects initial request to actual result page.'''
         response = self._get_page(query)
         src_page = BeautifulSoup(response.html, "html.parser")
-        url = src_page.select_one('iframe').get('src')
-
-        return url
+        return src_page.select_one('iframe').get('src')
 
     def _first_page(self):
         '''Returns the initial page and query.'''
@@ -40,9 +38,8 @@ class Metager(SearchEngine):
 
     def _next_page(self, tags):
         '''Returns the next page URL.'''
-        next_page = tags.select_one(self._selectors('next'))
-        url = None
-        if next_page:
+        if next_page := tags.select_one(self._selectors('next')):
             url = self.redirect(next_page['href'])
-
+        else:
+            url = None
         return {'url': url, 'data': None}

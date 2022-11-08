@@ -23,7 +23,7 @@ class Dogpile(SearchEngine):
     
     def _first_page(self):
         '''Returns the initial page and query.'''
-        url = u'{}/serp?q={}'.format(self._base_url, self._query)
+        url = f'{self._base_url}/serp?q={self._query}'
         return {'url':url, 'data':None}
     
     def _next_page(self, tags):

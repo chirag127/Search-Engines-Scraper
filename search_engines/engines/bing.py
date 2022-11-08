@@ -23,14 +23,14 @@ class Bing(SearchEngine):
     def _first_page(self):
         '''Returns the initial page and query.'''
         self._get_page(self._base_url)
-        url = u'{}/search?q={}&search=&form=QBLH'.format(self._base_url, self._query)
+        url = f'{self._base_url}/search?q={self._query}&search=&form=QBLH'
         return {'url':url, 'data':None}
     
     def _next_page(self, tags):
         '''Returns the next page URL and post data (if any)'''
         selector = self._selectors('next')
-        next_page = self._get_tag_item(tags.select_one(selector), 'href')
-        url = None
-        if next_page:
-            url = (self._base_url + next_page) 
+        if next_page := self._get_tag_item(tags.select_one(selector), 'href'):
+            url = (self._base_url + next_page)
+        else:
+            url = None
         return {'url':url, 'data':None}

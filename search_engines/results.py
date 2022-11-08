@@ -30,7 +30,7 @@ class SearchResults(object):
         return len(self._results)
 
     def __str__(self):
-        return '<SearchResults ({} items)>'.format(len(self._results))
+        return f'<SearchResults ({len(self._results)} items)>'
     
     def append(self, item):
         '''appends an item to the results list.'''
